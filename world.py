@@ -1,8 +1,8 @@
-'''
+"""
 Created on Jan 18, 2014
 
 @author: anthony.lozano
-'''
+"""
 import random
 from collections import deque
 import math
@@ -17,15 +17,15 @@ blocks = {"empty" : 1,
 headings = ["n", "s", "e", "w", "ne", "nw", "sw", "se"]
 
 class World(object):
-    '''
+    """
     classdocs
-    '''
+    """
 
 
     def __init__(self, width= 10, length= 10, hieght=2, hear_port="COM5", see_port="COM5", feel_port="COM5"):
-        '''
+        """
         Constructor
-        '''
+        """
         self.width = width
         self.length = length
         self.hieght = hieght
@@ -48,29 +48,30 @@ class World(object):
         #self.see_conn =  Serial(see_port, 115200)
         #self.feel_conn = Serial(feel_port, 115200)
 
+    @property
     def get_heading(self):
-        '''
-        retuns w, l, where w, l is the offsets you would add if you moved forward at this heading
-        '''
+        """
+        returns w, l, where w, l is the offsets you would add if you moved forward at this heading
+        """
         return self.heading[0]
 
     def get_pos(self, off_w=0, off_l=0, off_h=0):
-        '''
+        """
         Gets the current avatar position or the current position plus an offset
         :param off_w: w offset
         :param off_l: l offset
         :param off_z: z offset
         :return: current pos val, plus offset
-        '''
+        """
         try:
             return self.world_grid[self.w + off_w][self.l + off_l][self.h + off_h]
         except IndexError:
             return blocks['wall']
     
     def carve_path(self):
-        '''
+        """
         creates a random world of walls and cuts a path to the goal
-        '''
+        """
         final = self.length # once we reach the last length, we set the goal and terminate
         w, l, h = 0, 0, 0 # start at 0,0,0
         last_move_name, last_move_tuple = "forward", (0,1,0) # we don't want to repeat the last movement
@@ -88,21 +89,21 @@ class World(object):
         self.goal = (w,l,h) #after terminating, set this as the goal
             
     def listen(self):
-        '''
+        """
         searchs up and down for the distance to walls and returns the distance. Can also return block types in the future
-        '''
+        """
         up_distance, above = self.search(0, 0, 1)
         down_distance, below = self.search(0, 0, -1)
         return above, up_distance, below, down_distance
     
     def search(self, w, l, h):
-        '''
+        """
         :param w: steps w per tick
         :param l: steps l per tick
         :param h: steps h per tick
         given a heading, continues in that direction until it finds a non-empty voxel
         @return distance, block_type
-        '''
+        """
         c_w, c_l, c_h = w,l,h
         distance = 0
         while self.get_pos(c_w, c_l, c_h) == blocks['empty']:
@@ -113,9 +114,9 @@ class World(object):
         return distance, self.get_pos(c_w, c_l, c_h)
 
     def look(self):
-        '''
+        """
         returns a list from left to right what each LED should see. 5 directions, 5 objects, 5 distances
-        '''
+        """
         heading_queue = copy(self.heading)
         heading_queue.rotate(-2)
         headings = list(heading_queue)[:5] #gives a list of 5 headings from leftmost to rightmost
@@ -125,11 +126,11 @@ class World(object):
         return LED_list
 
     def move(self, is_forward):
-        '''
+        """
         moves the avatar position in the direction of heading if is_forward is true, opposite direction otherwise
         :param is_forward: boolean flag for forward motion. Reverse motion if false
-        '''
-        wh, lh= self.get_heading()
+        """
+        wh, lh= self.get_heading
         self.w += wh
         self.l += lh
         if self.get_pos() == blocks['wall']:
@@ -138,10 +139,10 @@ class World(object):
             
     
     def up_down(self, up):
-        '''
+        """
         move the avatar on the Z axis up or down
         :param up: boolean flag moves up if true, false otherwise
-        '''
+        """
         if up == 'u':
             up = 1
         elif up == 'n':
@@ -155,20 +156,20 @@ class World(object):
             self.h -= up
     
     def turn(self, is_right):
-        '''
+        """
         turns the avatars heading by rotating the heading circular list
         :param is_right: true if we are turning right, false otherwise
-        '''
+        """
         if is_right:
             self.heading.rotate(1)
         else:
             self.heading.rotate(-1)
     
     def find_goal(self):
-        '''
+        """
         Get the heading for the goal
         
-        '''
+        """
         w, l, h = self.get_pos()
         gw, gl, gh = self.goal 
         try:
