@@ -80,12 +80,12 @@ class World(object):
                  "down": (0, 0, -1)}  # possible moves
         self.world_grid[w][l][h] = blocks["empty"]  # set the current block empty
         while l != final:
-            move, (m_w, m_l, m_h) = random.choice(list(moves.iteritems()))  #  get a move
+            move, (m_w, m_l, m_h) = random.choice(list(moves.iteritems()))  # get a move
             w += m_w  # apply move
             l += m_l
             h += m_h
             self.world_grid[w][l][h] = blocks["empty"]  # set that cell empty
-            moves[last_move_name] = last_move_tuple  #  add back in the last move to movelist
+            moves[last_move_name] = last_move_tuple  # add back in the last move to movelist
             last_move_name, last_move_tuple = move, (m_w, m_l, m_h)  # copy the current move to last move
             moves.pop(last_move_name)  # remove the current
         self.goal = (w, l, h)  # after terminating, set this as the goal
@@ -122,7 +122,7 @@ class World(object):
         """
         heading_queue = copy(self.heading)
         heading_queue.rotate(-2)
-        headings = list(heading_queue)[:5]  # gives a list of 5 headings from leftmost to rightmost
+        headings = list(heading_queue)[:5] # gives a list of 5 headings from leftmost to rightmost
         LED_list = []
         for w, l in headings:
             LED_list.append(self.search(w, l, 0))
@@ -131,7 +131,7 @@ class World(object):
     def move(self, is_forward):
         """
         moves the avatar position in the direction of heading if is_forward is true, opposite direction otherwise
-        :param is_forward: boolean flag for forward motion. Reverse motion if false
+        :param is_forward: boolean flag for forward motion. Reverse motion if false TODO
         """
         wh, lh = self.get_heading
         self.w += wh
@@ -139,7 +139,6 @@ class World(object):
         if self.get_pos() == blocks['wall']:
             self.w -= wh
             self.l -= lh
-
 
     def up_down(self, up):
         """
